@@ -92,11 +92,6 @@ function handleCellClick(row, col) {
 
     if (!checkGameOver()) {
       switchPlayer()
-
-      // If playing against computer and it's computer's turn
-      if (gameMode === 'pvc' && currentPlayer === 'white') {
-        setTimeout(makeComputerMove, WHITE_TURN_DELAY)
-      }
     }
   }
 }
@@ -178,6 +173,13 @@ function getValidMoves(player) {
   return validMoves
 }
 
+// Schedule computer move if needed
+function scheduleComputerMoveIfNeeded() {
+  if (gameMode === 'pvc' && currentPlayer === 'white') {
+    setTimeout(makeComputerMove, WHITE_TURN_DELAY)
+  }
+}
+
 // Switch player
 function switchPlayer() {
   const opponent = currentPlayer === 'black' ? 'white' : 'black'
@@ -187,10 +189,12 @@ function switchPlayer() {
     currentPlayer = opponent
     updateCurrentPlayer()
     renderBoard()
+    scheduleComputerMoveIfNeeded()
   } else if (getValidMoves(currentPlayer).length > 0) {
     // Current player plays again
     updateCurrentPlayer()
     renderBoard()
+    scheduleComputerMoveIfNeeded()
   } else {
     // No valid moves for either player - game over
     endGame()
@@ -466,6 +470,9 @@ function loadColors() {
 document.addEventListener('DOMContentLoaded', () => {
   loadTheme()
   loadColors()
+  
+  // Initialize game mode from the checked radio button
+  gameMode = document.querySelector('input[name="gameMode"]:checked').value
   initGame()
 
   document.getElementById('newGame').addEventListener('click', () => {
