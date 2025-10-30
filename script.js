@@ -3,6 +3,7 @@ let board = [];
 let currentPlayer = 'black';
 let gameMode = 'pvp'; // 'pvp' or 'pvc'
 let gameActive = true;
+let lastComputerMove = null; // Track the last move made by computer
 const BOARD_SIZE = 8;
 
 // Directions for checking valid moves (8 directions)
@@ -25,6 +26,7 @@ function initGame() {
     
     currentPlayer = 'black';
     gameActive = true;
+    lastComputerMove = null; // Clear last move highlight on new game
     
     renderBoard();
     updateScore();
@@ -49,6 +51,11 @@ function renderBoard() {
                 cell.appendChild(disc);
             }
             
+            // Highlight the last computer move
+            if (lastComputerMove && lastComputerMove[0] === row && lastComputerMove[1] === col) {
+                cell.classList.add('last-move');
+            }
+            
             // Show valid moves for current player
             if (gameActive && isValidMove(row, col, currentPlayer)) {
                 cell.classList.add('valid-move');
@@ -65,6 +72,9 @@ function handleCellClick(row, col) {
     if (!gameActive) return;
     if (gameMode === 'pvc' && currentPlayer === 'white') return; // Computer's turn
     
+    // Clear the last computer move highlight when player makes a move
+    lastComputerMove = null;
+    
     if (makeMove(row, col, currentPlayer)) {
         renderBoard();
         updateScore();
@@ -74,7 +84,7 @@ function handleCellClick(row, col) {
             
             // If playing against computer and it's computer's turn
             if (gameMode === 'pvc' && currentPlayer === 'white') {
-                setTimeout(makeComputerMove, 500);
+                setTimeout(makeComputerMove, 1000);
             }
         }
     }
@@ -215,6 +225,9 @@ function makeComputerMove() {
     }
     
     if (bestMove) {
+        // Store the computer's move position to highlight it
+        lastComputerMove = bestMove;
+        
         makeMove(bestMove[0], bestMove[1], 'white');
         renderBoard();
         updateScore();
