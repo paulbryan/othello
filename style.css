@@ -182,11 +182,11 @@ h1 {
 
 .cell.last-move {
     background-color: rgba(100, 149, 237, 0.6);
-    animation: highlightMove 0.5s ease-in-out;
+    animation: highlightMove 1.5s ease-in-out;
 }
 
 @keyframes highlightMove {
-    0% {
+    0%, 50% {
         background-color: rgba(100, 149, 237, 0.9);
     }
     100% {

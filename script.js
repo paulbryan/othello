@@ -84,7 +84,7 @@ function handleCellClick(row, col) {
             
             // If playing against computer and it's computer's turn
             if (gameMode === 'pvc' && currentPlayer === 'white') {
-                setTimeout(makeComputerMove, 1000);
+                setTimeout(makeComputerMove, 2000);
             }
         }
     }
