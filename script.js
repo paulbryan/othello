@@ -213,7 +213,7 @@ function makeComputerMove() {
 
   // Strategy: prefer corners, edges, then maximize flips
   let bestMove = null
-  let bestScore = -1
+  let bestScore = -Infinity
 
   for (const [row, col] of validMoves) {
     let score = evaluateMove(row, col)
