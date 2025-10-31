@@ -2,10 +2,12 @@
 let board = []
 let currentPlayer = 'black'
 let gameMode = 'pvp' // 'pvp' or 'pvc'
+let playerColor = 'black' // Player's color in PvC mode
+let computerColor = 'white' // Computer's color in PvC mode
 let gameActive = true
 let lastComputerMove = null // Track the last move made by computer
 const BOARD_SIZE = 8
-const WHITE_TURN_DELAY = 1000 // 1 second delay for computer move
+const COMPUTER_TURN_DELAY = 1000 // 1 second delay for computer move
 // Directions for checking valid moves (8 directions)
 const DIRECTIONS = [
   [-1, -1],
@@ -38,6 +40,9 @@ function initGame() {
   renderBoard()
   updateScore()
   updateCurrentPlayer()
+  
+  // If computer plays black, make the first move
+  scheduleComputerMoveIfNeeded()
 }
 
 // Render the board
@@ -81,7 +86,7 @@ function renderBoard() {
 // Handle cell click
 function handleCellClick(row, col) {
   if (!gameActive) return
-  if (gameMode === 'pvc' && currentPlayer === 'white') return // Computer's turn
+  if (gameMode === 'pvc' && currentPlayer === computerColor) return // Computer's turn
 
   // Clear the last computer move highlight when player makes a move
   lastComputerMove = null
@@ -175,8 +180,8 @@ function getValidMoves(player) {
 
 // Schedule computer move if needed
 function scheduleComputerMoveIfNeeded() {
-  if (gameMode === 'pvc' && currentPlayer === 'white') {
-    setTimeout(makeComputerMove, WHITE_TURN_DELAY)
+  if (gameMode === 'pvc' && currentPlayer === computerColor) {
+    setTimeout(makeComputerMove, COMPUTER_TURN_DELAY)
   }
 }
 
@@ -205,7 +210,7 @@ function switchPlayer() {
 function makeComputerMove() {
   if (!gameActive) return
 
-  const validMoves = getValidMoves('white')
+  const validMoves = getValidMoves(computerColor)
   if (validMoves.length === 0) {
     switchPlayer()
     return
@@ -216,7 +221,7 @@ function makeComputerMove() {
   let bestScore = -Infinity
 
   for (const [row, col] of validMoves) {
-    let score = evaluateMove(row, col)
+    let score = evaluateMove(row, col, computerColor)
 
     // Prioritize corners
     if (
@@ -249,7 +254,7 @@ function makeComputerMove() {
     // Store the computer's move position to highlight it
     lastComputerMove = bestMove
 
-    makeMove(bestMove[0], bestMove[1], 'white')
+    makeMove(bestMove[0], bestMove[1], computerColor)
     renderBoard()
     updateScore()
 
@@ -260,9 +265,8 @@ function makeComputerMove() {
 }
 
 // Evaluate a move by counting how many discs would be flipped
-function evaluateMove(row, col) {
-  const player = 'white'
-  const opponent = 'black'
+function evaluateMove(row, col, player) {
+  const opponent = player === 'black' ? 'white' : 'black'
   let flips = 0
 
   for (const [dx, dy] of DIRECTIONS) {
@@ -354,12 +358,16 @@ function updateScore() {
 
 // Update current player display
 function updateCurrentPlayer() {
-  const playerName =
-    currentPlayer === 'black'
-      ? 'Black'
-      : gameMode === 'pvc'
-      ? 'Computer (White)'
-      : 'White'
+  let playerName
+  if (gameMode === 'pvc') {
+    if (currentPlayer === computerColor) {
+      playerName = `Computer (${computerColor === 'black' ? 'Black' : 'White'})`
+    } else {
+      playerName = currentPlayer === 'black' ? 'Black' : 'White'
+    }
+  } else {
+    playerName = currentPlayer === 'black' ? 'Black' : 'White'
+  }
   document.getElementById('currentPlayer').textContent = `${playerName}'s Turn`
 }
 
@@ -398,9 +406,10 @@ function endGame() {
 
   let message
   if (blackScore > whiteScore) {
-    message = `Black wins! ${blackScore} - ${whiteScore}`
+    const blackName = gameMode === 'pvc' && computerColor === 'black' ? 'Computer' : 'Black'
+    message = `${blackName} wins! ${blackScore} - ${whiteScore}`
   } else if (whiteScore > blackScore) {
-    const whiteName = gameMode === 'pvc' ? 'Computer' : 'White'
+    const whiteName = gameMode === 'pvc' && computerColor === 'white' ? 'Computer' : 'White'
     message = `${whiteName} wins! ${whiteScore} - ${blackScore}`
   } else {
     message = `It's a tie! ${blackScore} - ${whiteScore}`
@@ -466,23 +475,57 @@ function loadColors() {
   }
 }
 
+// Update color selection visibility based on game mode
+function updateColorSelectionVisibility() {
+  const colorSelection = document.getElementById('colorSelection')
+  if (gameMode === 'pvc') {
+    colorSelection.classList.remove('hidden')
+  } else {
+    colorSelection.classList.add('hidden')
+  }
+}
+
+// Load saved player color preference
+function loadPlayerColor() {
+  const savedPlayerColor = localStorage.getItem('playerColor')
+  if (savedPlayerColor) {
+    playerColor = savedPlayerColor
+    computerColor = playerColor === 'black' ? 'white' : 'black'
+    const radio = document.querySelector(`input[name="playerColor"][value="${playerColor}"]`)
+    if (radio) radio.checked = true
+  }
+}
+
+// Save player color preference
+function savePlayerColor() {
+  localStorage.setItem('playerColor', playerColor)
+}
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   loadTheme()
   loadColors()
+  loadPlayerColor()
   
   // Initialize game mode from the checked radio button
   gameMode = document.querySelector('input[name="gameMode"]:checked').value
+  updateColorSelectionVisibility()
   initGame()
 
   document.getElementById('newGame').addEventListener('click', () => {
     gameMode = document.querySelector('input[name="gameMode"]:checked').value
+    playerColor = document.querySelector('input[name="playerColor"]:checked').value
+    computerColor = playerColor === 'black' ? 'white' : 'black'
+    savePlayerColor()
     initGame()
     document.getElementById('gameOver').classList.add('hidden')
   })
 
   document.getElementById('playAgain').addEventListener('click', () => {
     gameMode = document.querySelector('input[name="gameMode"]:checked').value
+    playerColor = document.querySelector('input[name="playerColor"]:checked').value
+    computerColor = playerColor === 'black' ? 'white' : 'black'
+    savePlayerColor()
     initGame()
     document.getElementById('gameOver').classList.add('hidden')
   })
@@ -505,6 +548,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('input[name="gameMode"]').forEach((radio) => {
     radio.addEventListener('change', () => {
       gameMode = radio.value
+      updateColorSelectionVisibility()
+    })
+  })
+
+  document.querySelectorAll('input[name="playerColor"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      playerColor = radio.value
+      computerColor = playerColor === 'black' ? 'white' : 'black'
+      savePlayerColor()
     })
   })
 })
