@@ -250,6 +250,29 @@ h1 {
     cursor: pointer;
 }
 
+.color-selection {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+}
+
+.color-selection.hidden {
+    display: none;
+}
+
+.color-selection label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.color-selection input[type="radio"] {
+    cursor: pointer;
+}
+
 .game-over {
     position: fixed;
     top: 0;
