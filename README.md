@@ -30,6 +30,7 @@ A fully-featured web-based Othello (Reversi) game with multiplayer and AI oppone
 - Real-time score tracking
 - Automatic disc flipping
 - Game over detection with winner announcement
+- Celebratory confetti animation when you win against the computer
 
 ### AI Features
 - Strategic corner and edge prioritization
