@@ -13,6 +13,7 @@
             <div class="controls">
                 <button id="themeToggle" class="btn">🌓 Toggle Theme</button>
                 <button id="colorSettings" class="btn">🎨 Colors</button>
+                <button id="leaderboardBtn" class="btn">🏆 Leaderboard</button>
             </div>
         </header>
 
@@ -61,6 +62,16 @@
                     White
                 </label>
             </div>
+            <div id="playerNames" class="player-names hidden">
+                <div class="name-input-group">
+                    <label for="blackPlayerName">Black Player:</label>
+                    <input type="text" id="blackPlayerName" placeholder="Black" maxlength="20">
+                </div>
+                <div class="name-input-group">
+                    <label for="whitePlayerName">White Player:</label>
+                    <input type="text" id="whitePlayerName" placeholder="White" maxlength="20">
+                </div>
+            </div>
         </div>
 
         <div id="gameOver" class="game-over hidden">
@@ -89,6 +100,17 @@
                 <div class="modal-actions">
                     <button id="applyColors" class="btn btn-primary">Apply</button>
                     <button id="closeModal" class="btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="leaderboardModal" class="modal hidden">
+            <div class="modal-content leaderboard-content">
+                <h2>🏆 Leaderboard</h2>
+                <div id="leaderboardList" class="leaderboard-list"></div>
+                <div class="modal-actions">
+                    <button id="clearHistory" class="btn btn-danger">Clear History</button>
+                    <button id="closeLeaderboard" class="btn">Close</button>
                 </div>
             </div>
         </div>
