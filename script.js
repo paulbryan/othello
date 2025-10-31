@@ -6,6 +6,8 @@ let playerColor = 'black' // Player's color in PvC mode
 let computerColor = 'white' // Computer's color in PvC mode
 let gameActive = true
 let lastComputerMove = null // Track the last move made by computer
+let blackPlayerName = 'Black'
+let whitePlayerName = 'White'
 const BOARD_SIZE = 8
 const COMPUTER_TURN_DELAY = 1000 // 1 second delay for computer move
 // Directions for checking valid moves (8 directions)
@@ -363,10 +365,10 @@ function updateCurrentPlayer() {
     if (currentPlayer === computerColor) {
       playerName = `Computer (${computerColor === 'black' ? 'Black' : 'White'})`
     } else {
-      playerName = currentPlayer === 'black' ? 'Black' : 'White'
+      playerName = currentPlayer === 'black' ? blackPlayerName : whitePlayerName
     }
   } else {
-    playerName = currentPlayer === 'black' ? 'Black' : 'White'
+    playerName = currentPlayer === 'black' ? blackPlayerName : whitePlayerName
   }
   document.getElementById('currentPlayer').textContent = `${playerName}'s Turn`
 }
@@ -405,15 +407,23 @@ function endGame() {
   const whiteScore = parseInt(document.getElementById('whiteScore').textContent)
 
   let message
+  let winner = null
+  let blackName = gameMode === 'pvc' && computerColor === 'black' ? 'Computer' : blackPlayerName
+  let whiteName = gameMode === 'pvc' && computerColor === 'white' ? 'Computer' : whitePlayerName
+  
   if (blackScore > whiteScore) {
-    const blackName = gameMode === 'pvc' && computerColor === 'black' ? 'Computer' : 'Black'
     message = `${blackName} wins! ${blackScore} - ${whiteScore}`
+    winner = 'black'
   } else if (whiteScore > blackScore) {
-    const whiteName = gameMode === 'pvc' && computerColor === 'white' ? 'Computer' : 'White'
     message = `${whiteName} wins! ${whiteScore} - ${blackScore}`
+    winner = 'white'
   } else {
     message = `It's a tie! ${blackScore} - ${whiteScore}`
+    winner = 'tie'
   }
+
+  // Save to leaderboard
+  saveGameResult(blackName, whiteName, blackScore, whiteScore, winner)
 
   document.getElementById('gameOverTitle').textContent = 'Game Over!'
   document.getElementById('gameOverMessage').textContent = message
@@ -478,10 +488,14 @@ function loadColors() {
 // Update color selection visibility based on game mode
 function updateColorSelectionVisibility() {
   const colorSelection = document.getElementById('colorSelection')
+  const playerNames = document.getElementById('playerNames')
+  
   if (gameMode === 'pvc') {
     colorSelection.classList.remove('hidden')
+    playerNames.classList.add('hidden')
   } else {
     colorSelection.classList.add('hidden')
+    playerNames.classList.remove('hidden')
   }
 }
 
@@ -501,11 +515,116 @@ function savePlayerColor() {
   localStorage.setItem('playerColor', playerColor)
 }
 
+// Leaderboard functions
+function saveGameResult(blackName, whiteName, blackScore, whiteScore, winner) {
+  const history = getGameHistory()
+  const gameResult = {
+    blackPlayer: blackName,
+    whitePlayer: whiteName,
+    blackScore: blackScore,
+    whiteScore: whiteScore,
+    winner: winner,
+    date: new Date().toISOString(),
+    gameMode: gameMode
+  }
+  
+  history.unshift(gameResult) // Add to beginning
+  
+  // Keep only the last 50 games
+  if (history.length > 50) {
+    history.splice(50)
+  }
+  
+  localStorage.setItem('othelloHistory', JSON.stringify(history))
+}
+
+function getGameHistory() {
+  const historyStr = localStorage.getItem('othelloHistory')
+  return historyStr ? JSON.parse(historyStr) : []
+}
+
+function clearGameHistory() {
+  localStorage.removeItem('othelloHistory')
+  displayLeaderboard()
+}
+
+function displayLeaderboard() {
+  const history = getGameHistory()
+  const listElement = document.getElementById('leaderboardList')
+  
+  if (history.length === 0) {
+    listElement.innerHTML = '<div class="leaderboard-empty">No games played yet. Start playing to build your history!</div>'
+    return
+  }
+  
+  listElement.innerHTML = history.map(game => {
+    const date = new Date(game.date)
+    const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+    
+    let winnerClass = ''
+    let resultText = ''
+    
+    if (game.winner === 'black') {
+      winnerClass = 'winner-black'
+      resultText = `${game.blackPlayer} won`
+    } else if (game.winner === 'white') {
+      winnerClass = 'winner-white'
+      resultText = `${game.whitePlayer} won`
+    } else {
+      winnerClass = 'tie'
+      resultText = 'Tie game'
+    }
+    
+    return `
+      <div class="leaderboard-item ${winnerClass}">
+        <div class="leaderboard-header">
+          <span class="leaderboard-players">${resultText}</span>
+        </div>
+        <div class="leaderboard-score">
+          <span>⚫ ${game.blackPlayer}: ${game.blackScore}</span>
+          <span>⚪ ${game.whitePlayer}: ${game.whiteScore}</span>
+        </div>
+        <div class="leaderboard-date">${dateStr}</div>
+      </div>
+    `
+  }).join('')
+}
+
+// Update player names from inputs
+function updatePlayerNames() {
+  const blackInput = document.getElementById('blackPlayerName').value.trim()
+  const whiteInput = document.getElementById('whitePlayerName').value.trim()
+  
+  blackPlayerName = blackInput || 'Black'
+  whitePlayerName = whiteInput || 'White'
+  
+  // Save to localStorage
+  localStorage.setItem('blackPlayerName', blackPlayerName)
+  localStorage.setItem('whitePlayerName', whitePlayerName)
+}
+
+// Load player names from localStorage
+function loadPlayerNames() {
+  const savedBlackName = localStorage.getItem('blackPlayerName')
+  const savedWhiteName = localStorage.getItem('whitePlayerName')
+  
+  if (savedBlackName) {
+    blackPlayerName = savedBlackName
+    document.getElementById('blackPlayerName').value = savedBlackName
+  }
+  
+  if (savedWhiteName) {
+    whitePlayerName = savedWhiteName
+    document.getElementById('whitePlayerName').value = savedWhiteName
+  }
+}
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   loadTheme()
   loadColors()
   loadPlayerColor()
+  loadPlayerNames()
   
   // Initialize game mode from the checked radio button
   gameMode = document.querySelector('input[name="gameMode"]:checked').value
@@ -518,6 +637,8 @@ document.addEventListener('DOMContentLoaded', () => {
       playerColor = document.querySelector('input[name="playerColor"]:checked').value
       computerColor = playerColor === 'black' ? 'white' : 'black'
       savePlayerColor()
+    } else {
+      updatePlayerNames()
     }
     initGame()
     document.getElementById('gameOver').classList.add('hidden')
@@ -529,6 +650,8 @@ document.addEventListener('DOMContentLoaded', () => {
       playerColor = document.querySelector('input[name="playerColor"]:checked').value
       computerColor = playerColor === 'black' ? 'white' : 'black'
       savePlayerColor()
+    } else {
+      updatePlayerNames()
     }
     initGame()
     document.getElementById('gameOver').classList.add('hidden')
@@ -563,4 +686,26 @@ document.addEventListener('DOMContentLoaded', () => {
       savePlayerColor()
     })
   })
+
+  // Leaderboard button
+  document.getElementById('leaderboardBtn').addEventListener('click', () => {
+    displayLeaderboard()
+    document.getElementById('leaderboardModal').classList.remove('hidden')
+  })
+
+  // Close leaderboard
+  document.getElementById('closeLeaderboard').addEventListener('click', () => {
+    document.getElementById('leaderboardModal').classList.add('hidden')
+  })
+
+  // Clear history
+  document.getElementById('clearHistory').addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all game history? This cannot be undone.')) {
+      clearGameHistory()
+    }
+  })
+
+  // Update player names on input change
+  document.getElementById('blackPlayerName').addEventListener('input', updatePlayerNames)
+  document.getElementById('whitePlayerName').addEventListener('input', updatePlayerNames)
 })
