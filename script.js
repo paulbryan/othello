@@ -399,6 +399,76 @@ function checkGameOver() {
   return false
 }
 
+// Celebrate player win with confetti
+function celebrateWin() {
+  const canvas = document.getElementById('confetti-canvas')
+  if (!canvas) return
+  
+  canvas.style.display = 'block'
+  const ctx = canvas.getContext('2d')
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+  
+  const confettiPieces = []
+  const confettiCount = 150
+  const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd93d', '#6bcf7f', '#c44569', '#5f27cd']
+  
+  // Create confetti pieces
+  for (let i = 0; i < confettiCount; i++) {
+    confettiPieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      width: Math.random() * 10 + 5,
+      height: Math.random() * 10 + 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotationSpeed: Math.random() * 10 - 5,
+      velocityX: Math.random() * 4 - 2,
+      velocityY: Math.random() * 3 + 2,
+      gravity: 0.2
+    })
+  }
+  
+  function updateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    
+    let stillActive = false
+    
+    confettiPieces.forEach(piece => {
+      // Update position
+      piece.x += piece.velocityX
+      piece.y += piece.velocityY
+      piece.velocityY += piece.gravity
+      piece.rotation += piece.rotationSpeed
+      
+      // Check if still on screen
+      if (piece.y < canvas.height + 50) {
+        stillActive = true
+      }
+      
+      // Draw confetti
+      ctx.save()
+      ctx.translate(piece.x, piece.y)
+      ctx.rotate((piece.rotation * Math.PI) / 180)
+      ctx.fillStyle = piece.color
+      ctx.fillRect(-piece.width / 2, -piece.height / 2, piece.width, piece.height)
+      ctx.restore()
+    })
+    
+    if (stillActive) {
+      requestAnimationFrame(updateConfetti)
+    } else {
+      // Hide canvas after animation completes
+      setTimeout(() => {
+        canvas.style.display = 'none'
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+      }, 500)
+    }
+  }
+  
+  updateConfetti()
+}
+
 // End the game
 function endGame() {
   gameActive = false
@@ -424,6 +494,15 @@ function endGame() {
 
   // Save to leaderboard
   saveGameResult(blackName, whiteName, blackScore, whiteScore, winner)
+
+  // Show confetti if player wins against computer
+  if (gameMode === 'pvc' && winner !== 'tie') {
+    const playerWon = (winner === 'black' && computerColor !== 'black') || 
+                     (winner === 'white' && computerColor !== 'white')
+    if (playerWon) {
+      celebrateWin()
+    }
+  }
 
   document.getElementById('gameOverTitle').textContent = 'Game Over!'
   document.getElementById('gameOverMessage').textContent = message
