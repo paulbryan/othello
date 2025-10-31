@@ -514,18 +514,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('newGame').addEventListener('click', () => {
     gameMode = document.querySelector('input[name="gameMode"]:checked').value
-    playerColor = document.querySelector('input[name="playerColor"]:checked').value
-    computerColor = playerColor === 'black' ? 'white' : 'black'
-    savePlayerColor()
+    if (gameMode === 'pvc') {
+      playerColor = document.querySelector('input[name="playerColor"]:checked').value
+      computerColor = playerColor === 'black' ? 'white' : 'black'
+      savePlayerColor()
+    }
     initGame()
     document.getElementById('gameOver').classList.add('hidden')
   })
 
   document.getElementById('playAgain').addEventListener('click', () => {
     gameMode = document.querySelector('input[name="gameMode"]:checked').value
-    playerColor = document.querySelector('input[name="playerColor"]:checked').value
-    computerColor = playerColor === 'black' ? 'white' : 'black'
-    savePlayerColor()
+    if (gameMode === 'pvc') {
+      playerColor = document.querySelector('input[name="playerColor"]:checked').value
+      computerColor = playerColor === 'black' ? 'white' : 'black'
+      savePlayerColor()
+    }
     initGame()
     document.getElementById('gameOver').classList.add('hidden')
   })
