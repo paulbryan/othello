@@ -517,30 +517,39 @@ function savePlayerColor() {
 
 // Leaderboard functions
 function saveGameResult(blackName, whiteName, blackScore, whiteScore, winner) {
-  const history = getGameHistory()
-  const gameResult = {
-    blackPlayer: blackName,
-    whitePlayer: whiteName,
-    blackScore: blackScore,
-    whiteScore: whiteScore,
-    winner: winner,
-    date: new Date().toISOString(),
-    gameMode: gameMode
+  try {
+    const history = getGameHistory()
+    const gameResult = {
+      blackPlayer: blackName,
+      whitePlayer: whiteName,
+      blackScore: blackScore,
+      whiteScore: whiteScore,
+      winner: winner,
+      date: new Date().toISOString(),
+      gameMode: gameMode
+    }
+    
+    history.unshift(gameResult) // Add to beginning
+    
+    // Keep only the last 50 games
+    if (history.length > 50) {
+      history.splice(50)
+    }
+    
+    localStorage.setItem('othelloHistory', JSON.stringify(history))
+  } catch (e) {
+    console.error('Failed to save game result:', e)
   }
-  
-  history.unshift(gameResult) // Add to beginning
-  
-  // Keep only the last 50 games
-  if (history.length > 50) {
-    history.splice(50)
-  }
-  
-  localStorage.setItem('othelloHistory', JSON.stringify(history))
 }
 
 function getGameHistory() {
-  const historyStr = localStorage.getItem('othelloHistory')
-  return historyStr ? JSON.parse(historyStr) : []
+  try {
+    const historyStr = localStorage.getItem('othelloHistory')
+    return historyStr ? JSON.parse(historyStr) : []
+  } catch (e) {
+    console.error('Failed to load game history:', e)
+    return []
+  }
 }
 
 function clearGameHistory() {
@@ -557,7 +566,10 @@ function displayLeaderboard() {
     return
   }
   
-  listElement.innerHTML = history.map(game => {
+  // Clear existing content
+  listElement.innerHTML = ''
+  
+  history.forEach(game => {
     const date = new Date(game.date)
     const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
     
@@ -566,28 +578,50 @@ function displayLeaderboard() {
     
     if (game.winner === 'black') {
       winnerClass = 'winner-black'
-      resultText = `${game.blackPlayer} won`
+      resultText = `${escapeHtml(game.blackPlayer)} won`
     } else if (game.winner === 'white') {
       winnerClass = 'winner-white'
-      resultText = `${game.whitePlayer} won`
+      resultText = `${escapeHtml(game.whitePlayer)} won`
     } else {
       winnerClass = 'tie'
       resultText = 'Tie game'
     }
     
-    return `
-      <div class="leaderboard-item ${winnerClass}">
-        <div class="leaderboard-header">
-          <span class="leaderboard-players">${resultText}</span>
-        </div>
-        <div class="leaderboard-score">
-          <span>⚫ ${game.blackPlayer}: ${game.blackScore}</span>
-          <span>⚪ ${game.whitePlayer}: ${game.whiteScore}</span>
-        </div>
-        <div class="leaderboard-date">${dateStr}</div>
-      </div>
-    `
-  }).join('')
+    const item = document.createElement('div')
+    item.className = `leaderboard-item ${winnerClass}`
+    
+    const header = document.createElement('div')
+    header.className = 'leaderboard-header'
+    const players = document.createElement('span')
+    players.className = 'leaderboard-players'
+    players.textContent = resultText
+    header.appendChild(players)
+    
+    const scoreDiv = document.createElement('div')
+    scoreDiv.className = 'leaderboard-score'
+    const blackScore = document.createElement('span')
+    blackScore.textContent = `⚫ ${game.blackPlayer}: ${game.blackScore}`
+    const whiteScore = document.createElement('span')
+    whiteScore.textContent = `⚪ ${game.whitePlayer}: ${game.whiteScore}`
+    scoreDiv.appendChild(blackScore)
+    scoreDiv.appendChild(whiteScore)
+    
+    const dateDiv = document.createElement('div')
+    dateDiv.className = 'leaderboard-date'
+    dateDiv.textContent = dateStr
+    
+    item.appendChild(header)
+    item.appendChild(scoreDiv)
+    item.appendChild(dateDiv)
+    listElement.appendChild(item)
+  })
+}
+
+// Helper function to escape HTML
+function escapeHtml(text) {
+  const div = document.createElement('div')
+  div.textContent = text
+  return div.innerHTML
 }
 
 // Update player names from inputs
@@ -599,8 +633,12 @@ function updatePlayerNames() {
   whitePlayerName = whiteInput || 'White'
   
   // Save to localStorage
-  localStorage.setItem('blackPlayerName', blackPlayerName)
-  localStorage.setItem('whitePlayerName', whitePlayerName)
+  try {
+    localStorage.setItem('blackPlayerName', blackPlayerName)
+    localStorage.setItem('whitePlayerName', whitePlayerName)
+  } catch (e) {
+    console.error('Failed to save player names:', e)
+  }
 }
 
 // Load player names from localStorage
