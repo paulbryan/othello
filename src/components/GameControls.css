@@ -1,0 +1,86 @@
+.game-controls {
+    margin-top: 20px;
+    text-align: center;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow);
+}
+
+.mode-selection {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.mode-selection label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.mode-selection input[type="radio"] {
+    cursor: pointer;
+}
+
+.color-selection {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+}
+
+.color-selection label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.color-selection input[type="radio"] {
+    cursor: pointer;
+}
+
+.player-names {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.name-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.name-input-group label {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.name-input-group input[type="text"] {
+    padding: 8px 12px;
+    border: 2px solid var(--cell-border);
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: border-color 0.2s;
+}
+
+.name-input-group input[type="text"]:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+@media (max-width: 768px) {
+    .mode-selection {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

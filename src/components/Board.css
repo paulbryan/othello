@@ -1,0 +1,77 @@
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+    background-color: var(--cell-border);
+    padding: 2px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+.cell {
+    aspect-ratio: 1;
+    background-color: var(--board-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.cell:hover {
+    background-color: color-mix(in srgb, var(--board-color) 85%, white);
+}
+
+.cell.valid-move {
+    background-color: var(--valid-move);
+}
+
+.cell.valid-move:hover {
+    background-color: rgba(255, 215, 0, 0.7);
+}
+
+.cell.last-move {
+    background-color: rgba(100, 149, 237, 0.6);
+    animation: highlightMove 1.5s ease-in-out;
+}
+
+@keyframes highlightMove {
+    0%, 50% {
+        background-color: rgba(100, 149, 237, 0.9);
+    }
+    100% {
+        background-color: rgba(100, 149, 237, 0.6);
+    }
+}
+
+.disc {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    animation: placeDisc 0.3s ease-out;
+}
+
+@keyframes placeDisc {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.disc.black {
+    background-color: var(--black-piece);
+    box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.2),
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.disc.white {
+    background-color: var(--white-piece);
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.2),
+                inset 2px 2px 4px rgba(255, 255, 255, 0.5);
+}

@@ -1,0 +1,83 @@
+:root {
+    --bg-color: #f5f5f5;
+    --text-color: #333;
+    --board-color: #2d8659;
+    --cell-border: #1a5236;
+    --valid-move: rgba(255, 215, 0, 0.5);
+    --black-piece: #000000;
+    --white-piece: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+}
+
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --board-color: #1e5a3d;
+    --cell-border: #0f2e1f;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --card-bg: #2a2a2a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 800px;
+    width: 100%;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    box-shadow: 0 2px 5px var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #357abd;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
