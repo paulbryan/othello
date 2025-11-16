@@ -1,17 +1,14 @@
 # Othello Game
 
-A fully-featured web-based Othello (Reversi) game with multiplayer and AI opponent.
+A fully-featured web-based Othello (Reversi) game built with React and Vite, featuring multiplayer and AI opponent.
 
 ## Screenshots
 
 ### Initial Game State
-![Initial Game](https://github.com/user-attachments/assets/2ddd2748-1517-4964-891a-b6a7ead7466f)
-
-### Active Gameplay
-![Gameplay](https://github.com/user-attachments/assets/07655c3b-0e03-4d17-8cbb-7396fc99a2c3)
+![Initial Game](https://github.com/user-attachments/assets/37abcd66-f4ad-4d95-aa9d-d37316d1117a)
 
 ### Dark Mode
-![Dark Mode](https://github.com/user-attachments/assets/3216fde7-894e-4435-8a3d-d1adecae554d)
+![Dark Mode](https://github.com/user-attachments/assets/cd13627e-292f-4573-bad9-e378f121e137)
 
 ## Features
 
@@ -23,6 +20,7 @@ A fully-featured web-based Othello (Reversi) game with multiplayer and AI oppone
 - **Light/Dark Mode**: Toggle between light and dark themes
 - **Color Customization**: Personalize board and piece colors
 - **Persistent Settings**: Your theme and color preferences are saved
+- **Game History**: Track your past games with a leaderboard
 
 ### Gameplay
 - Standard 8×8 Othello rules
@@ -37,13 +35,70 @@ A fully-featured web-based Othello (Reversi) game with multiplayer and AI oppone
 - Avoids risky positions near empty corners
 - Maximizes disc captures
 
+## Technologies Used
+
+- React 19
+- Vite 7
+- CSS3 (with CSS Variables for theming)
+- Modern JavaScript (ES6+)
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v20 or higher)
+- npm (v10 or higher)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/paulbryan/othello.git
+cd othello
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+### Building for Production
+
+To create a production build:
+```bash
+npm run build
+```
+
+The build output will be in the `dist` directory.
+
+### Preview Production Build
+
+To preview the production build locally:
+```bash
+npm run preview
+```
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
 ## How to Play
 
-1. Open `index.html` in a web browser
-2. Select your game mode (Player vs Player or Player vs Computer)
-3. Click "New Game" to start
-4. Click on highlighted cells to make valid moves
-5. The game ends when no valid moves remain
+1. Select your game mode (Player vs Player or Player vs Computer)
+2. Click "New Game" to start
+3. Click on highlighted cells to make valid moves
+4. The game ends when no valid moves remain
 
 ## Detailed Game Rules
 
@@ -64,12 +119,6 @@ The goal of Othello is to have the majority of your colored discs on the board w
 1. **Valid Moves**: A move is valid only if it "captures" at least one opponent's disc
 2. **Capturing**: To capture opponent discs, you must place your disc so that one or more opponent discs are sandwiched in a straight line (horizontally, vertically, or diagonally) between your newly placed disc and another disc of your color
 3. **Immediate Flipping**: All captured discs are immediately flipped to your color
-
-#### Valid Move Examples
-- **Horizontal capture**: Place a disc that creates a line like `Black-White-White-Black` (the two white discs in the middle get flipped to black)
-- **Vertical capture**: Same concept but in a vertical line
-- **Diagonal capture**: Same concept but along a diagonal
-- **Multiple directions**: A single move can capture discs in multiple directions simultaneously
 
 #### Turn Progression
 1. Players alternate turns, with Black moving first
@@ -114,19 +163,3 @@ The winner is determined by counting the discs:
 - Focus on position and mobility rather than just disc count
 - The final count is what matters
 
-## Technologies Used
-
-- HTML5
-- CSS3 (with CSS Variables for theming)
-- Vanilla JavaScript (no frameworks required)
-
-## Running the Game
-
-Simply open `index.html` in any modern web browser. No build process or server required.
-
-For local development with live reload, you can use:
-```bash
-python3 -m http.server 8000
-```
-
-Then navigate to `http://localhost:8000`
