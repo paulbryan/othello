@@ -19,6 +19,16 @@
     min-width: 300px;
 }
 
+.confirm-modal-content {
+    max-width: 400px;
+}
+
+.confirm-message {
+    margin: 20px 0;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
 .leaderboard-content {
     max-width: 600px;
     max-height: 80vh;

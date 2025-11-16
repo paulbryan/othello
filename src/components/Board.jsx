@@ -1,9 +1,15 @@
 import './Board.css';
 
 const Board = ({ board, currentPlayer, gameActive, lastComputerMove, isValidMove, handleCellClick }) => {
-  // Guard against undefined board
+  // Show loading skeleton if board is not ready
   if (!board || board.length === 0) {
-    return <div className="board">Loading...</div>;
+    return (
+      <div className="board board-loading">
+        {Array.from({ length: 64 }).map((_, index) => (
+          <div key={index} className="cell cell-loading"></div>
+        ))}
+      </div>
+    );
   }
 
   return (

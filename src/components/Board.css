@@ -10,6 +10,10 @@
     box-shadow: 0 4px 15px var(--shadow);
 }
 
+.board-loading {
+    opacity: 0.6;
+}
+
 .cell {
     aspect-ratio: 1;
     background-color: var(--board-color);
@@ -21,8 +25,16 @@
     transition: background-color 0.2s;
 }
 
+.cell-loading {
+    cursor: default;
+}
+
 .cell:hover {
     background-color: color-mix(in srgb, var(--board-color) 85%, white);
+}
+
+.cell-loading:hover {
+    background-color: var(--board-color);
 }
 
 .cell.valid-move {

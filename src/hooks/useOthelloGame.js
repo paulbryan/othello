@@ -202,11 +202,11 @@ export const useOthelloGame = () => {
 
   // Computer AI move
   const makeComputerMove = useCallback(() => {
-    if (!gameActive) return;
+    if (!gameActive) return false;
 
     const validMoves = getValidMoves(board, computerColor);
     if (validMoves.length === 0) {
-      return;
+      return false;
     }
 
     let bestMove = null;
@@ -245,7 +245,10 @@ export const useOthelloGame = () => {
     if (bestMove) {
       setLastComputerMove(bestMove);
       makeMove(bestMove[0], bestMove[1], computerColor);
+      return true;
     }
+    
+    return false;
   }, [board, computerColor, gameActive, getValidMoves, evaluateMove, isNextToEmptyCorner, makeMove]);
 
   // Calculate scores
@@ -350,17 +353,20 @@ export const useOthelloGame = () => {
 
   // Effect to make computer move
   useEffect(() => {
-    if (gameMode === 'pvc' && currentPlayer === computerColor && gameActive) {
+    if (gameMode === 'pvc' && currentPlayer === computerColor && gameActive && board.length > 0) {
       const timer = setTimeout(() => {
-        makeComputerMove();
-        if (!checkGameOver()) {
+        const moveMade = makeComputerMove();
+        if (moveMade && !checkGameOver()) {
+          switchPlayer();
+        } else if (!moveMade) {
+          // Computer has no valid moves, switch player
           switchPlayer();
         }
       }, COMPUTER_TURN_DELAY);
 
       return () => clearTimeout(timer);
     }
-  }, [gameMode, currentPlayer, computerColor, gameActive, makeComputerMove, checkGameOver, switchPlayer]);
+  }, [gameMode, currentPlayer, computerColor, gameActive, board, makeComputerMove, checkGameOver, switchPlayer]);
 
   // Initialize on mount
   useEffect(() => {

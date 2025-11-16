@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import ConfirmModal from './ConfirmModal';
 import './Modal.css';
 
 const LeaderboardModal = ({ show, onClose }) => {
   const [history, setHistory] = useState([]);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const loadHistory = useCallback(() => {
     try {
@@ -23,11 +25,18 @@ const LeaderboardModal = ({ show, onClose }) => {
     }
   }, [show, loadHistory]);
 
-  const clearHistory = () => {
-    if (confirm('Are you sure you want to clear all game history? This cannot be undone.')) {
-      localStorage.removeItem('othelloHistory');
-      setHistory([]);
-    }
+  const handleClearHistory = () => {
+    setShowConfirm(true);
+  };
+
+  const confirmClearHistory = () => {
+    localStorage.removeItem('othelloHistory');
+    setHistory([]);
+    setShowConfirm(false);
+  };
+
+  const cancelClearHistory = () => {
+    setShowConfirm(false);
   };
 
   const escapeHtml = (text) => {
@@ -39,54 +48,63 @@ const LeaderboardModal = ({ show, onClose }) => {
   if (!show) return null;
 
   return (
-    <div className="modal">
-      <div className="modal-content leaderboard-content">
-        <h2>🏆 Leaderboard</h2>
-        <div className="leaderboard-list">
-          {history.length === 0 ? (
-            <div className="leaderboard-empty">
-              No games played yet. Start playing to build your history!
-            </div>
-          ) : (
-            history.map((game, index) => {
-              const date = new Date(game.date);
-              const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    <>
+      <div className="modal">
+        <div className="modal-content leaderboard-content">
+          <h2>🏆 Leaderboard</h2>
+          <div className="leaderboard-list">
+            {history.length === 0 ? (
+              <div className="leaderboard-empty">
+                No games played yet. Start playing to build your history!
+              </div>
+            ) : (
+              history.map((game, index) => {
+                const date = new Date(game.date);
+                const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
-              let winnerClass = '';
-              let resultText = '';
+                let winnerClass = '';
+                let resultText = '';
 
-              if (game.winner === 'black') {
-                winnerClass = 'winner-black';
-                resultText = `${escapeHtml(game.blackPlayer)} won`;
-              } else if (game.winner === 'white') {
-                winnerClass = 'winner-white';
-                resultText = `${escapeHtml(game.whitePlayer)} won`;
-              } else {
-                winnerClass = 'tie';
-                resultText = 'Tie game';
-              }
+                if (game.winner === 'black') {
+                  winnerClass = 'winner-black';
+                  resultText = `${escapeHtml(game.blackPlayer)} won`;
+                } else if (game.winner === 'white') {
+                  winnerClass = 'winner-white';
+                  resultText = `${escapeHtml(game.whitePlayer)} won`;
+                } else {
+                  winnerClass = 'tie';
+                  resultText = 'Tie game';
+                }
 
-              return (
-                <div key={index} className={`leaderboard-item ${winnerClass}`}>
-                  <div className="leaderboard-header">
-                    <span className="leaderboard-players">{resultText}</span>
+                return (
+                  <div key={index} className={`leaderboard-item ${winnerClass}`}>
+                    <div className="leaderboard-header">
+                      <span className="leaderboard-players">{resultText}</span>
+                    </div>
+                    <div className="leaderboard-score">
+                      <span>⚫ {game.blackPlayer}: {game.blackScore}</span>
+                      <span>⚪ {game.whitePlayer}: {game.whiteScore}</span>
+                    </div>
+                    <div className="leaderboard-date">{dateStr}</div>
                   </div>
-                  <div className="leaderboard-score">
-                    <span>⚫ {game.blackPlayer}: {game.blackScore}</span>
-                    <span>⚪ {game.whitePlayer}: {game.whiteScore}</span>
-                  </div>
-                  <div className="leaderboard-date">{dateStr}</div>
-                </div>
-              );
-            })
-          )}
-        </div>
-        <div className="modal-actions">
-          <button onClick={clearHistory} className="btn btn-danger">Clear History</button>
-          <button onClick={onClose} className="btn">Close</button>
+                );
+              })
+            )}
+          </div>
+          <div className="modal-actions">
+            <button onClick={handleClearHistory} className="btn btn-danger">Clear History</button>
+            <button onClick={onClose} className="btn">Close</button>
+          </div>
         </div>
       </div>
-    </div>
+      <ConfirmModal
+        show={showConfirm}
+        title="Clear History"
+        message="Are you sure you want to clear all game history? This action cannot be undone."
+        onConfirm={confirmClearHistory}
+        onCancel={cancelClearHistory}
+      />
+    </>
   );
 };
 
