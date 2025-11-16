@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 export const useGameHistory = () => {
   const saveGameResult = (blackName, whiteName, blackScore, whiteScore, winner, gameMode) => {
     try {
@@ -39,7 +41,7 @@ export const useGameHistory = () => {
 };
 
 export const useLocalStorage = (key, defaultValue) => {
-  const getValue = () => {
+  const getValue = useCallback(() => {
     try {
       const item = localStorage.getItem(key);
       return item ? item : defaultValue;
@@ -47,15 +49,15 @@ export const useLocalStorage = (key, defaultValue) => {
       console.error(`Failed to get ${key} from localStorage:`, e);
       return defaultValue;
     }
-  };
+  }, [key, defaultValue]);
 
-  const setValue = (value) => {
+  const setValue = useCallback((value) => {
     try {
       localStorage.setItem(key, value);
     } catch (e) {
       console.error(`Failed to set ${key} in localStorage:`, e);
     }
-  };
+  }, [key]);
 
   return { getValue, setValue };
 };

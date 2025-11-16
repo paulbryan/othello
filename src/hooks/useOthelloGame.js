@@ -16,7 +16,20 @@ const DIRECTIONS = [
 ];
 
 export const useOthelloGame = () => {
-  const [board, setBoard] = useState([]);
+  const [board, setBoard] = useState(() => {
+    // Initialize board lazily
+    const newBoard = Array(BOARD_SIZE)
+      .fill(null)
+      .map(() => Array(BOARD_SIZE).fill(null));
+
+    const mid = BOARD_SIZE / 2;
+    newBoard[mid - 1][mid - 1] = 'white';
+    newBoard[mid - 1][mid] = 'black';
+    newBoard[mid][mid - 1] = 'black';
+    newBoard[mid][mid] = 'white';
+
+    return newBoard;
+  });
   const [currentPlayer, setCurrentPlayer] = useState('black');
   const [gameMode, setGameMode] = useState('pvc');
   const [playerColor, setPlayerColor] = useState('black');
@@ -367,17 +380,6 @@ export const useOthelloGame = () => {
       return () => clearTimeout(timer);
     }
   }, [gameMode, currentPlayer, computerColor, gameActive, board, makeComputerMove, checkGameOver, switchPlayer]);
-
-  // Initialize on mount
-  useEffect(() => {
-    const newBoard = initBoard();
-    setBoard(newBoard);
-    setCurrentPlayer('black');
-    setGameActive(true);
-    setLastComputerMove(null);
-    setGameOverInfo(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return {
     board,

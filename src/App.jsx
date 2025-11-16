@@ -65,8 +65,7 @@ function App() {
     if (savedWhiteName) {
       game.setWhitePlayerName(savedWhiteName);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getPlayerColor, getBlackName, getWhiteName, game]);
 
   // Save game result when game is over
   useEffect(() => {
