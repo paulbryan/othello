@@ -1,6 +1,7 @@
 import { BOARD_SIZE, DIRECTIONS } from './constants'
+import type { Board, Player, Position, Scores } from '../types'
 
-export function createInitialBoard() {
+export function createInitialBoard(): Board {
   const board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null))
   const mid = BOARD_SIZE / 2
   board[mid - 1][mid - 1] = 'white'
@@ -10,7 +11,7 @@ export function createInitialBoard() {
   return board
 }
 
-export function isValidMove(board, row, col, player) {
+export function isValidMove(board: Board, row: number, col: number, player: Player): boolean {
   if (board[row][col] !== null) return false
 
   const opponent = player === 'black' ? 'white' : 'black'
@@ -36,8 +37,8 @@ export function isValidMove(board, row, col, player) {
   return false
 }
 
-export function getValidMoves(board, player) {
-  const validMoves = []
+export function getValidMoves(board: Board, player: Player): Position[] {
+  const validMoves: Position[] = []
   for (let row = 0; row < BOARD_SIZE; row++) {
     for (let col = 0; col < BOARD_SIZE; col++) {
       if (isValidMove(board, row, col, player)) {
@@ -48,14 +49,14 @@ export function getValidMoves(board, player) {
   return validMoves
 }
 
-export function calculateFlips(board, row, col, player) {
+export function calculateFlips(board: Board, row: number, col: number, player: Player): Position[] {
   const opponent = player === 'black' ? 'white' : 'black'
-  const flips = []
+  const flips: Position[] = []
 
   for (const [dx, dy] of DIRECTIONS) {
     let x = row + dx
     let y = col + dy
-    const potentialFlips = []
+    const potentialFlips: Position[] = []
 
     while (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
       if (board[x][y] === null) break
@@ -72,7 +73,7 @@ export function calculateFlips(board, row, col, player) {
   return flips
 }
 
-export function evaluateMove(board, row, col, player) {
+export function evaluateMove(board: Board, row: number, col: number, player: Player): number {
   const opponent = player === 'black' ? 'white' : 'black'
   let flips = 0
 
@@ -109,7 +110,7 @@ export function evaluateMove(board, row, col, player) {
   return score
 }
 
-export function getScores(board) {
+export function getScores(board: Board): Scores {
   let black = 0
   let white = 0
   for (let row = 0; row < BOARD_SIZE; row++) {

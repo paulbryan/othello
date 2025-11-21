@@ -6,11 +6,12 @@ import Leaderboard from './components/Leaderboard'
 import Confetti from './components/Confetti'
 import { useOthello } from './hooks/useOthello'
 import { useLocalStorage } from './hooks/useLocalStorage'
+import type { GameColors, LeaderboardEntry, GameMode, Player } from './types'
 import './index.css'
 
 function App() {
   // Theme
-  const [theme, setTheme] = useLocalStorage('theme', 'light')
+  const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'light')
   useEffect(() => {
     if (theme === 'dark') {
       document.body.classList.add('dark-mode')
@@ -20,7 +21,7 @@ function App() {
   }, [theme])
 
   // Colors
-  const [colors, setColors] = useLocalStorage('colors', {
+  const [colors, setColors] = useLocalStorage<GameColors>('colors', {
     boardColor: '#2d8659',
     blackPieceColor: '#000000',
     whitePieceColor: '#ffffff'
@@ -33,11 +34,11 @@ function App() {
   }, [colors])
 
   // Player Names
-  const [blackName, setBlackName] = useLocalStorage('blackPlayerName', 'Black')
-  const [whiteName, setWhiteName] = useLocalStorage('whitePlayerName', 'White')
+  const [blackName, setBlackName] = useLocalStorage<string>('blackPlayerName', 'Black')
+  const [whiteName, setWhiteName] = useLocalStorage<string>('whitePlayerName', 'White')
 
   // Leaderboard
-  const [leaderboard, setLeaderboard] = useLocalStorage('othelloHistory', [])
+  const [leaderboard, setLeaderboard] = useLocalStorage<LeaderboardEntry[]>('othelloHistory', [])
   const [showLeaderboard, setShowLeaderboard] = useState(false)
 
   // Game Logic
@@ -99,8 +100,8 @@ function App() {
 
   return (
     <div className="container">
-      <Confetti active={!gameActive && winner && winner !== 'tie' && 
-        ((winner === 'black' && playerColor === 'black') || (winner === 'white' && playerColor === 'white') || gameMode === 'pvp')} />
+      <Confetti active={!!(winner && winner !== 'tie' && 
+        ((winner === 'black' && playerColor === 'black') || (winner === 'white' && playerColor === 'white') || gameMode === 'pvp'))} />
 
       <header>
         <h1>Othello</h1>
@@ -153,7 +154,7 @@ function App() {
               name="gameMode"
               value="pvp"
               checked={gameMode === 'pvp'}
-              onChange={(e) => setGameMode(e.target.value)}
+              onChange={(e) => setGameMode(e.target.value as GameMode)}
             />
             Player vs Player
           </label>
@@ -163,7 +164,7 @@ function App() {
               name="gameMode"
               value="pvc"
               checked={gameMode === 'pvc'}
-              onChange={(e) => setGameMode(e.target.value)}
+              onChange={(e) => setGameMode(e.target.value as GameMode)}
             />
             Player vs Computer
           </label>
@@ -178,7 +179,7 @@ function App() {
                 name="playerColor"
                 value="black"
                 checked={playerColor === 'black'}
-                onChange={(e) => setPlayerColor(e.target.value)}
+                onChange={(e) => setPlayerColor(e.target.value as Player)}
               />
               Black
             </label>
@@ -188,7 +189,7 @@ function App() {
                 name="playerColor"
                 value="white"
                 checked={playerColor === 'white'}
-                onChange={(e) => setPlayerColor(e.target.value)}
+                onChange={(e) => setPlayerColor(e.target.value as Player)}
               />
               White
             </label>

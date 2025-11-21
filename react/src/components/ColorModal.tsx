@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import type { GameColors } from '../types'
 
-function ColorModal({ isOpen, onClose, onApply, initialColors }) {
-  const [colors, setColors] = useState(initialColors)
+interface ColorModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onApply: (colors: GameColors) => void;
+  initialColors: GameColors;
+}
+
+function ColorModal({ isOpen, onClose, onApply, initialColors }: ColorModalProps) {
+  const [colors, setColors] = useState<GameColors>(initialColors)
 
   useEffect(() => {
     if (isOpen) {
@@ -9,7 +17,7 @@ function ColorModal({ isOpen, onClose, onApply, initialColors }) {
     }
   }, [isOpen, initialColors])
 
-  const handleChange = (key, value) => {
+  const handleChange = (key: keyof GameColors, value: string) => {
     setColors(prev => ({ ...prev, [key]: value }))
   }
 
