@@ -1,17 +1,38 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
-function Confetti({ active }) {
-  const canvasRef = useRef(null)
+interface ConfettiPiece {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  color: string;
+  rotation: number;
+  rotationSpeed: number;
+  velocityX: number;
+  velocityY: number;
+  gravity: number;
+}
+
+interface ConfettiProps {
+  active: boolean;
+}
+
+function Confetti({ active }: ConfettiProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     if (!active) return
 
     const canvas = canvasRef.current
+    if (!canvas) return
+    
     const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
-    const confettiPieces = []
+    const confettiPieces: ConfettiPiece[] = []
     const confettiCount = 150
     const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd93d', '#6bcf7f', '#c44569', '#5f27cd']
 
@@ -30,9 +51,9 @@ function Confetti({ active }) {
       })
     }
 
-    let animationId
+    let animationId: number
     function updateConfetti() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx!.clearRect(0, 0, canvas!.width, canvas!.height)
       let stillActive = false
 
       confettiPieces.forEach(piece => {
@@ -41,16 +62,16 @@ function Confetti({ active }) {
         piece.velocityY += piece.gravity
         piece.rotation += piece.rotationSpeed
 
-        if (piece.y < canvas.height + 50) {
+        if (piece.y < canvas!.height + 50) {
           stillActive = true
         }
 
-        ctx.save()
-        ctx.translate(piece.x, piece.y)
-        ctx.rotate((piece.rotation * Math.PI) / 180)
-        ctx.fillStyle = piece.color
-        ctx.fillRect(-piece.width / 2, -piece.height / 2, piece.width, piece.height)
-        ctx.restore()
+        ctx!.save()
+        ctx!.translate(piece.x, piece.y)
+        ctx!.rotate((piece.rotation * Math.PI) / 180)
+        ctx!.fillStyle = piece.color
+        ctx!.fillRect(-piece.width / 2, -piece.height / 2, piece.width, piece.height)
+        ctx!.restore()
       })
 
       if (stillActive) {
@@ -61,8 +82,12 @@ function Confetti({ active }) {
     updateConfetti()
 
     return () => {
-      cancelAnimationFrame(animationId)
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      if (animationId !== undefined) {
+        cancelAnimationFrame(animationId)
+      }
+      if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+      }
     }
   }, [active])
 

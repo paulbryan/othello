@@ -1,14 +1,21 @@
-import React from 'react'
 import Cell from './Cell'
 import { BOARD_SIZE } from '../utils/constants'
+import type { Board as BoardType, Position } from '../types'
 
-function Board({ board, validMoves, lastComputerMove, onCellClick }) {
+interface BoardProps {
+  board: BoardType;
+  validMoves: Position[];
+  lastComputerMove: Position | null;
+  onCellClick: (row: number, col: number) => void;
+}
+
+function Board({ board, validMoves, lastComputerMove, onCellClick }: BoardProps) {
   const renderBoard = () => {
     const cells = []
     for (let row = 0; row < BOARD_SIZE; row++) {
       for (let col = 0; col < BOARD_SIZE; col++) {
         const isValid = validMoves.some(move => move[0] === row && move[1] === col)
-        const isLastMove = lastComputerMove && lastComputerMove[0] === row && lastComputerMove[1] === col
+        const isLastMove = !!(lastComputerMove && lastComputerMove[0] === row && lastComputerMove[1] === col)
         
         cells.push(
           <Cell

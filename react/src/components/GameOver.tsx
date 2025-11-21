@@ -1,6 +1,15 @@
-import React from 'react'
+import type { Winner, Scores } from '../types'
 
-function GameOver({ isOpen, winner, scores, blackName, whiteName, onPlayAgain }) {
+interface GameOverProps {
+  isOpen: boolean;
+  winner: Winner;
+  scores: Scores;
+  blackName: string;
+  whiteName: string;
+  onPlayAgain: () => void;
+}
+
+function GameOver({ isOpen, winner, scores, blackName, whiteName, onPlayAgain }: GameOverProps) {
   if (!isOpen) return null
 
   let message

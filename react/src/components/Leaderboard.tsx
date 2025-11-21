@@ -1,6 +1,12 @@
-import React from 'react'
+import type { LeaderboardEntry } from '../types'
 
-function Leaderboard({ history, onClose, onClear }) {
+interface LeaderboardProps {
+  history: LeaderboardEntry[];
+  onClose: () => void;
+  onClear: () => void;
+}
+
+function Leaderboard({ history, onClose, onClear }: LeaderboardProps) {
   return (
     <div className="modal">
       <div className="modal-content leaderboard-content">

@@ -1,18 +1,19 @@
 import { useState, useEffect, useCallback } from 'react'
-import { createInitialBoard, getValidMoves, calculateFlips, evaluateMove, getScores } from '../utils/gameLogic'
+import { createInitialBoard, getValidMoves, calculateFlips, evaluateMove, getScores, isValidMove } from '../utils/gameLogic'
+import type { Board, Player, GameMode, Winner, Position } from '../types'
 
 const COMPUTER_TURN_DELAY = 1000
 
 export function useOthello() {
-  const [board, setBoard] = useState(createInitialBoard)
-  const [currentPlayer, setCurrentPlayer] = useState('black')
-  const [gameMode, setGameMode] = useState('pvc') // 'pvp' or 'pvc'
-  const [playerColor, setPlayerColor] = useState('black') // For PvC
-  const [gameActive, setGameActive] = useState(true)
-  const [lastComputerMove, setLastComputerMove] = useState(null)
-  const [winner, setWinner] = useState(null)
+  const [board, setBoard] = useState<Board>(createInitialBoard)
+  const [currentPlayer, setCurrentPlayer] = useState<Player>('black')
+  const [gameMode, setGameMode] = useState<GameMode>('pvc')
+  const [playerColor, setPlayerColor] = useState<Player>('black')
+  const [gameActive, setGameActive] = useState<boolean>(true)
+  const [lastComputerMove, setLastComputerMove] = useState<Position | null>(null)
+  const [winner, setWinner] = useState<Winner>(null)
 
-  const computerColor = playerColor === 'black' ? 'white' : 'black'
+  const computerColor: Player = playerColor === 'black' ? 'white' : 'black'
 
   const resetGame = useCallback(() => {
     setBoard(createInitialBoard())
@@ -22,47 +23,13 @@ export function useOthello() {
     setWinner(null)
   }, [])
 
-  const makeMove = useCallback((row, col) => {
-    if (!gameActive) return false
-    
-    const flips = calculateFlips(board, row, col, currentPlayer)
-    if (flips.length === 0) return false
-
-    const newBoard = board.map(r => [...r])
-    newBoard[row][col] = currentPlayer
-    flips.forEach(([r, c]) => {
-      newBoard[r][c] = currentPlayer
-    })
-
-    setBoard(newBoard)
-    
-    // Switch player logic handled in useEffect to support skipping turns
-    return true
-  }, [board, currentPlayer, gameActive])
-
-  // Handle turn switching and game over check
-  useEffect(() => {
-    if (!gameActive) return
-
-    const opponent = currentPlayer === 'black' ? 'white' : 'black'
-    const opponentMoves = getValidMoves(board, opponent)
-    const currentMoves = getValidMoves(board, currentPlayer)
-
-    // Check if move was just made (board changed)
-    // This effect runs on board change. 
-    // But we need to be careful not to loop.
-    // Actually, makeMove updates board. Then we check if we should switch.
-    
-    // Wait, this logic is tricky in React.
-    // Let's do it explicitly in makeMove or a separate effect that watches board/currentPlayer.
-  }, [board, currentPlayer, gameActive])
 
   // Better approach:
   // makeMove updates board.
   // Then we need to switch player.
   // But we also need to check if the NEXT player has moves.
   
-  const handleTurnEnd = useCallback((currentBoard, nextPlayer) => {
+  const handleTurnEnd = useCallback((currentBoard: Board, nextPlayer: Player) => {
     const nextPlayerMoves = getValidMoves(currentBoard, nextPlayer)
     
     if (nextPlayerMoves.length > 0) {
@@ -87,12 +54,14 @@ export function useOthello() {
     }
   }, [])
 
-  const handleCellClick = (row, col) => {
+  const handleCellClick = (row: number, col: number) => {
     if (!gameActive) return
     if (gameMode === 'pvc' && currentPlayer === computerColor) return
 
+    // Validate the move is legal
+    if (!isValidMove(board, row, col, currentPlayer)) return
+
     const flips = calculateFlips(board, row, col, currentPlayer)
-    if (flips.length === 0) return
 
     const newBoard = board.map(r => [...r])
     newBoard[row][col] = currentPlayer
@@ -119,7 +88,7 @@ export function useOthello() {
             return
         }
 
-        let bestMove = null
+        let bestMove: Position | null = null
         let bestScore = -Infinity
 
         for (const [row, col] of validMoves) {
@@ -152,12 +121,6 @@ export function useOthello() {
     }
   }, [currentPlayer, gameMode, computerColor, gameActive, board, handleTurnEnd])
 
-  // Initial computer move if computer is black
-  useEffect(() => {
-      if (gameMode === 'pvc' && computerColor === 'black' && currentPlayer === 'black' && gameActive) {
-          // This is covered by the general computer move effect
-      }
-  }, [gameMode, computerColor, currentPlayer, gameActive])
 
   return {
     board,
