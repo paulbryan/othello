@@ -1,0 +1,127 @@
+
+Running 16 tests using 6 workers
+
+  ✓   2 [Mobile Safari] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (1.2s)
+  ✓   3 [Mobile Safari] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (1.4s)
+  ✓   4 [Mobile Chrome] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (1.9s)
+  ✓   1 [Mobile Chrome] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (2.3s)
+  ✓   6 [Mobile Chrome] › tests\responsiveness.spec.js:38:3 › Othello Responsive Tests › should display modals correctly (2.4s)
+  ✓   8 [Mobile Safari] › tests\responsiveness.spec.js:38:3 › Othello Responsive Tests › should display modals correctly (2.7s)
+  ✓  11 [Tablet] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (1.7s)
+  ✓   9 [Tablet] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (1.9s)
+  ✓  12 [Tablet] › tests\responsiveness.spec.js:38:3 › Othello Responsive Tests › should display modals correctly (2.7s)
+  ✘   5 [Mobile Chrome] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (7.6s)
+  ✘   7 [Mobile Safari] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (7.7s)
+  ✓  14 [Desktop] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (1.2s)
+  ✓  13 [Desktop] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (1.5s)
+  ✓  16 [Desktop] › tests\responsiveness.spec.js:38:3 › Othello Responsive Tests › should display modals correctly (874ms)
+  ✘  10 [Tablet] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (8.0s)
+  ✘  15 [Desktop] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (6.0s)
+
+
+  1) [Mobile Chrome] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.cell.valid-move').first().locator('.disc')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.cell.valid-move').first().locator('.disc')[22m
+
+
+      33 |     
+      34 |     // Verify move was made (cell should contain a disc)
+    > 35 |     await expect(validMove.locator('.disc')).toBeVisible();
+         |                                              ^
+      36 |   });
+      37 |
+      38 |   test('should display modals correctly', async ({ page }) => {
+        at C:\Users\paul\Repos\othello\tests\responsiveness.spec.js:35:46
+
+    Error Context: test-results\responsiveness-Othello-Res-2c0ca-interaction-on-touch-mobile-Mobile-Chrome\error-context.md
+
+  2) [Mobile Safari] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.cell.valid-move').first().locator('.disc')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.cell.valid-move').first().locator('.disc')[22m
+
+
+      33 |     
+      34 |     // Verify move was made (cell should contain a disc)
+    > 35 |     await expect(validMove.locator('.disc')).toBeVisible();
+         |                                              ^
+      36 |   });
+      37 |
+      38 |   test('should display modals correctly', async ({ page }) => {
+        at C:\Users\paul\Repos\othello\tests\responsiveness.spec.js:35:46
+
+    Error Context: test-results\responsiveness-Othello-Res-2c0ca-interaction-on-touch-mobile-Mobile-Safari\error-context.md
+
+  3) [Tablet] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.cell.valid-move').first().locator('.disc')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.cell.valid-move').first().locator('.disc')[22m
+
+
+      33 |     
+      34 |     // Verify move was made (cell should contain a disc)
+    > 35 |     await expect(validMove.locator('.disc')).toBeVisible();
+         |                                              ^
+      36 |   });
+      37 |
+      38 |   test('should display modals correctly', async ({ page }) => {
+        at C:\Users\paul\Repos\othello\tests\responsiveness.spec.js:35:46
+
+    Error Context: test-results\responsiveness-Othello-Res-2c0ca-interaction-on-touch-mobile-Tablet\error-context.md
+
+  4) [Desktop] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.cell.valid-move').first().locator('.disc')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.cell.valid-move').first().locator('.disc')[22m
+
+
+      33 |     
+      34 |     // Verify move was made (cell should contain a disc)
+    > 35 |     await expect(validMove.locator('.disc')).toBeVisible();
+         |                                              ^
+      36 |   });
+      37 |
+      38 |   test('should display modals correctly', async ({ page }) => {
+        at C:\Users\paul\Repos\othello\tests\responsiveness.spec.js:35:46
+
+    Error Context: test-results\responsiveness-Othello-Res-2c0ca-interaction-on-touch-mobile-Desktop\error-context.md
+
+  4 failed
+    [Mobile Chrome] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+    [Mobile Safari] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+    [Tablet] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+    [Desktop] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile 
+  12 passed (19.3s)

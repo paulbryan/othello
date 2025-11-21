@@ -2,7 +2,7 @@
   "name": "othello",
   "compatibility_date": "2025-10-30",
   "assets": {
-    "directory": "./legacy/",
+    "directory": "./",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   }

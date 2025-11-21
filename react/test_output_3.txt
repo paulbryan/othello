@@ -1,0 +1,21 @@
+
+Running 16 tests using 6 workers
+
+  ✓   6 [Mobile Chrome] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (5.1s)
+  ✓   5 [Mobile Chrome] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (5.4s)
+  ✓   2 [Mobile Safari] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (6.7s)
+  ✓   3 [Mobile Chrome] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (5.7s)
+  ✓   1 [Mobile Safari] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (6.7s)
+  ✓   4 [Mobile Chrome] › tests\responsiveness.spec.js:45:3 › Othello Responsive Tests › should display modals correctly (5.7s)
+  ✓  12 [Tablet] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (4.3s)
+  ✓   7 [Tablet] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (5.4s)
+  ✓  11 [Mobile Safari] › tests\responsiveness.spec.js:45:3 › Othello Responsive Tests › should display modals correctly (7.2s)
+  ✓   9 [Tablet] › tests\responsiveness.spec.js:45:3 › Othello Responsive Tests › should display modals correctly (7.6s)
+  ✓  10 [Mobile Safari] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (7.8s)
+  ✓   8 [Tablet] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (8.5s)
+  ✓  13 [Desktop] › tests\responsiveness.spec.js:15:3 › Othello Responsive Tests › should fit content within viewport without horizontal scroll (2.4s)
+  ✓  14 [Desktop] › tests\responsiveness.spec.js:8:3 › Othello Responsive Tests › should load homepage and display key elements (2.5s)
+  ✓  15 [Desktop] › tests\responsiveness.spec.js:23:3 › Othello Responsive Tests › should allow game interaction on touch/mobile (2.3s)
+  ✓  16 [Desktop] › tests\responsiveness.spec.js:45:3 › Othello Responsive Tests › should display modals correctly (2.3s)
+
+  16 passed (28.5s)
