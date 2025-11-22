@@ -18,8 +18,8 @@ export default function App() {
     blackPieceColor: '#000000',
     whitePieceColor: '#ffffff',
   });
-  const [blackName, setBlackName] = useAsyncStorage<string>('blackPlayerName', 'Black');
-  const [whiteName, setWhiteName] = useAsyncStorage<string>('whitePlayerName', 'White');
+  const [blackName] = useAsyncStorage<string>('blackPlayerName', 'Black');
+  const [whiteName] = useAsyncStorage<string>('whitePlayerName', 'White');
   const [leaderboard, setLeaderboard] = useAsyncStorage<LeaderboardEntry[]>('othelloHistory', []);
 
   // UI state

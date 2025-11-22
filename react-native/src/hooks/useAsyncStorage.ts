@@ -1,19 +1,11 @@
 // AsyncStorage hook for React Native
-import React from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-export function useAsyncStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const [value, setValue] = useState<T>(() => {
-    try {
-      const item = AsyncStorage.getItem(key);
-      // AsyncStorage.getItem returns a Promise, so we initialize with initialValue and load actual value in effect.
-      return initialValue;
-    } catch (error) {
-      console.error(error);
-      return initialValue;
-    }
-  });
+export function useAsyncStorage<T>(key: string, initialValue: T): [T, Dispatch<SetStateAction<T>>] {
+  const [value, setValue] = useState<T>(initialValue);
+  const isInitialMount = useRef(true);
 
   // Load stored value on mount
   useEffect(() => {
@@ -27,6 +19,7 @@ export function useAsyncStorage<T>(key: string, initialValue: T): [T, React.Disp
             console.error('Failed to parse stored value', e);
           }
         }
+        isInitialMount.current = false;
       })
       .catch(err => console.error(err));
     return () => {
@@ -34,9 +27,11 @@ export function useAsyncStorage<T>(key: string, initialValue: T): [T, React.Disp
     };
   }, [key]);
 
-  // Persist changes
+  // Persist changes (skip on initial mount to avoid race condition)
   useEffect(() => {
-    AsyncStorage.setItem(key, JSON.stringify(value)).catch(err => console.error(err));
+    if (!isInitialMount.current) {
+      AsyncStorage.setItem(key, JSON.stringify(value)).catch(err => console.error(err));
+    }
   }, [key, value]);
 
   return [value, setValue];
