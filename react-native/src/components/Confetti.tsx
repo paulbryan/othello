@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 interface ConfettiProps {
@@ -8,7 +8,6 @@ interface ConfettiProps {
 
 export default function Confetti({ active }: ConfettiProps) {
   const cannonRef = useRef<ConfettiCannon>(null);
-  const windowWidth = Dimensions.get('window').width;
 
   useEffect(() => {
     if (active && cannonRef.current) {
